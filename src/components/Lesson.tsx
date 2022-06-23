@@ -1,5 +1,5 @@
 import { CheckCircle, Lock } from "phosphor-react";
-
+import { isPast, format } from "date-fns";
 interface LessonProps {
   title: string;
   slug: string;
@@ -8,11 +8,15 @@ interface LessonProps {
 }
 
 export function Lesson({ title, slug, availableAt, type }: LessonProps) {
-  const isLessonAvailable = true;
+  const isLessonAvailable = isPast(availableAt);
+  const formattedAvailableDate = format(
+    availableAt,
+    "EEEE' • 'MMMM d' • 'k'h'mm"
+  );
 
   return (
     <a href="#">
-      <span className="text-gray-300">{availableAt.toString()}</span>
+      <span className="text-gray-300">{formattedAvailableDate}</span>
 
       <div className="rounded border border-gray-500 p-4 mt-2">
         <header className="flex items-center justify-between">
@@ -24,11 +28,11 @@ export function Lesson({ title, slug, availableAt, type }: LessonProps) {
           ) : (
             <span className="text-sm text-orange-500 font-medium flex items-center gap-2">
               <Lock size={20} />
-              Content available
+              Content {isLessonAvailable ? "available" : "unavailable"}
             </span>
           )}
           <span className="text-xs rounded py-[0.125rem] px-2 text-white border border-green-300">
-            {type === "live" ? "LIVE" : "HANDS-ON LAB"}
+            {type === "live" ? "LIVE" : "CLASS"}
           </span>
         </header>
 
